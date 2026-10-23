@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10111c">
+<title>Glass Diary</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  color-scheme: dark;
+  --bg:#10111c; --panel:rgba(30,32,51,.67);
+  --line:rgba(255,255,255,.09); --text:#f5f4ff;
+  --muted:#999bb5; --accent:#ad9cff; --soft:rgba(255,255,255,.045);
+}
+*{box-sizing:border-box}
+body {
+  margin:0; min-height:100vh; background:var(--bg); color:var(--text);
+  font-family:Manrope,-apple-system,sans-serif;
+  background-image:radial-gradient(ellipse at 15% 0%,#5543a536,transparent 42%),
+  radial-gradient(ellipse at 100% 45%,#27668d25,transparent 40%);
+  transition:background .25s,color .25s;
+}
+body.light {
+  color-scheme:light; --bg:#eef0fa; --panel:rgba(255,255,255,.7);
+  --line:rgba(40,40,80,.11); --text:#25253b; --muted:#777990;
+  --accent:#7059db; --soft:rgba(60,50,110,.045);
+}
+button{font:inherit;cursor:pointer;color:inherit}
+.app{max-width:1150px;margin:auto;padding:22px}
+.glass {
+  background:var(--panel);border:1px solid var(--line);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  box-shadow:0 18px 60px #00000012;border-radius:22px;
+}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;gap:12px}
+.brand{display:flex;align-items:center;gap:11px}
+.logo {
+  width:44px;height:44px;display:grid;place-items:center;border-radius:15px;
+  background:linear-gradient(140deg,#c5b7ff,#7561e8);
+  color:white;font-size:26px;font-weight:800;box-shadow:0 6px 24px #8872ef44
+}
+.brand h2{font-size:17px;margin:0;font-weight:800;letter-spacing:-.7px}
+.brand p{font-size:11px;color:var(--muted);margin:3px 0 0}
+.theme {
+  width:43px;height:43px;border-radius:14px;border:1px solid var(--line);
+  background:var(--panel);font-size:20px
+}
+.greeting{margin:24px 0}
+.eyebrow{color:var(--accent);font-size:10px;letter-spacing:1.7px;font-weight:800}
+h1{font-size:clamp(27px,5vw,39px);letter-spacing:-1.7px;margin:9px 0}
+.sub{font-size:13px;color:var(--muted);line-height:1.7;margin:0}
+nav{display:flex;gap:8px;overflow-x:auto;padding:0 0 15px;scrollbar-width:none}
+nav button {
+  flex-shrink:0;border:1px solid var(--line);border-radius:12px;
+  padding:11px 15px;background:var(--soft);font-size:12px;font-weight:700
+}
+nav button.active{background:#a18cff24;border-color:#a18cff66;color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:15px}
+.stat{padding:19px;min-width:0}
+.stat-label{font-size:11px;color:var(--muted)}
+.stat-value{font-size:30px;font-weight:800;letter-spacing:-1.4px;margin:13px 0 4px}
+.stat-note{font-size:10px;color:var(--muted)}
+.purple{color:#b7a7ff}.green{color:#6edbb0}.orange{color:#ffbd83}
+.columns{display:grid;grid-template-columns:1.1fr .9fr;gap:15px}
+.panel{padding:20px;margin-bottom:15px;min-width:0}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:17px}
+.panel-head h3{font-size:14px;margin:0;letter-spacing:-.4px}
+.panel-head p{font-size:10px;color:var(--muted);margin:5px 0 0}
+.link{background:none;border:0;color:var(--accent);font-size:10px;font-weight:800}
+.lesson,.grade,.task {
+  display:flex;align-items:center;gap:12px;padding:12px 10px;
+  border:1px solid var(--line);background:var(--soft);border-radius:14px;
+  margin-bottom:8px;min-width:0
+}
+.lesson-time{font-size:10px;line-height:1.7;color:var(--muted);min-width:40px}
+.lesson-bar{height:34px;width:4px;flex-shrink:0;border-radius:9px;background:#a695ff}
+.lesson:nth-child(2) .lesson-bar{background:#6fcaff}
+.lesson:nth-child(3) .lesson-bar{background:#ffbd83}
+.lesson:nth-child(4) .lesson-bar{background:#6edbb0}
+.lesson-copy,.grade-copy,.task-copy{flex:1;min-width:0}
+.lesson-copy b,.grade-copy b,.task-copy b{font-size:11px;display:block;overflow-wrap:anywhere}
+.lesson-copy small,.grade-copy small,.task-copy small{font-size:10px;color:var(--muted);display:block;margin-top:4px}
+.room{font-size:9px;color:var(--muted);white-space:nowrap}
+.grade-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:var(--soft)}
+.mark{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#6edbb01b;color:#6edbb0;font-weight:800;font-size:12px}
+.mark.four{background:#a695ff1b;color:#b7a7ff}
+.mark.three{background:#ffbd831b;color:#ffbd83}
+.task input{accent-color:#9a83ff;width:17px;height:17px;flex-shrink:0}
+.task.done .task-copy{opacity:.5;text-decoration:line-through}
+.due{font-size:9px;color:#ffbd83;white-space:nowrap}
+.page{display:none}.page.active{display:block}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:18px}
+.week button{padding:11px 0;border-radius:10px;border:1px solid var(--line);background:var(--soft);font-size:10px}
+.week button.active{background:#a18cff24;color:var(--accent);border-color:#a18cff66}
+.filter{padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font:inherit;font-size:10px;max-width:135px}
+.grade-head{display:grid;grid-template-columns:1fr 40px 65px;gap:8px;padding:8px 3px;color:var(--muted);font-size:9px;text-transform:uppercase}
+.grade-table-row{display:grid;grid-template-columns:1fr 40px 65px;align-items:center;gap:8px;padding:12px 3px;border-top:1px solid var(--line);font-size:11px}
+.grade-table-row small{color:var(--muted);font-size:9px}
+.note{text-align:center;font-size:10px;color:var(--muted);line-height:1.7;padding:15px}
+footer{text-align:center;color:var(--muted);font-size:10px;padding:8px 0 25px}
+.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,20px);opacity:0;transition:.2s;background:#29263e;color:white;border:1px solid #ffffff25;border-radius:13px;padding:12px 17px;font-size:12px;pointer-events:none;z-index:5}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:700px){
+ .app{padding:17px 13px}.stats{grid-template-columns:1fr 1fr;gap:9px}
+ .stat{padding:15px}.stat:first-child{grid-column:1/-1}
+ .stat-value{font-size:27px}.columns{grid-template-columns:1fr;gap:0}
+ .panel{padding:15px;border-radius:18px}.greeting{margin:23px 0}
+ .room{font-size:9px}.lesson{gap:9px;padding:11px 8px}
+ .panel-head h3{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="brand">
+  <div class="logo">g</div>
+  <div><h2>glass diary</h2><p>Твой учебный кабинет</p></div>
+ </div>
+ <button class="theme" id="theme" aria-label="Переключить тему">◐</button>
+</header>
+
+<div class="greeting">
+ <div class="eyebrow" id="date">ТВОЙ УЧЕБНЫЙ ДЕНЬ</div>
+ <h1 id="heading">Привет! 👋</h1>
+ <p class="sub">Вся твоя учёба — в одном месте.<br>Коротко, понятно и без лишнего.</p>
+</div>
+
+<nav>
+ <button class="active" data-page="overview">◫ Обзор</button>
+ <button data-page="schedule">▦ Расписание</button>
+ <button data-page="grades">✳ Оценки</button>
+ <button data-page="homework">☷ Домашка</button>
+</nav>
+
+<section class="page active" id="overview">
+ <div class="stats">
+  <article class="glass stat"><div class="stat-label">Средний балл</div><div class="stat-value">4,6 <span class="green" style="font-size:12px">↗ 0,2</span></div><div class="stat-note">За текущую четверть</div></article>
+  <article class="glass stat"><div class="stat-label">Новые оценки</div><div class="stat-value">28</div><div class="stat-note">За последние 30 дней</div></article>
+  <article class="glass stat"><div class="stat-label">Домашние задания</div><div class="stat-value">3 <span style="font-size:12px;color:var(--muted)">активных</span></div><div class="stat-note">Не забудь про дедлайны</div></article>
+ </div>
+ <div class="columns">
+  <section class="glass panel">
+   <div class="panel-head"><div><h3>Расписание</h3><p>Пример уроков на сегодня</p></div><button class="link" data-go="schedule">ВСЁ ↗</button></div>
+   <div id="previewLessons"></div>
+  </section>
+  <section class="glass panel">
+   <div class="panel-head"><div><h3>Последние оценки</h3><p>Твои результаты</p></div><button class="link" data-go="grades">ВСЁ ↗</button></div>
+   <div id="previewGrades"></div>
+  </section>
+ </div>
+ <section class="glass panel">
+  <div class="panel-head"><div><h3>Не забудь сделать</h3><p>Ближайшие задания</p></div><button class="link" data-go="homework">ВСЁ ↗</button></div>
+  <div id="previewTasks"></div>
+ </section>
+ <div class="note">Демонстрационный интерфейс. Оценки, расписание и задания пока вымышленные.</div>
+</section>
+
+<section class="page" id="schedule">
+ <section class="glass panel">
+  <div class="panel-head"><div><h3>Расписание уроков</h3><p>Учебная неделя · демо</p></div></div>
+  <div class="week"><button>ПН</button><button>ВТ</button><button>СР</button><button>ЧТ</button><button class="active">ПТ</button><button>СБ</button><button>ВС</button></div>
+  <div id="allLessons"></div>
+ </section>
+</section>
+
+<section class="page" id="grades">
+ <section class="glass panel">
+  <div class="panel-head"><div><h3>Журнал оценок</h3><p>Результаты по предметам</p></div>
+   <select id="filter" class="filter"><option value="all">Все предметы</option><option>Алгебра</option><option>Английский</option><option>История</option><option>Физика</option><option>Литература</option></select>
+  </div>
+  <div class="grade-head"><span>Предмет / работа</span><span>Балл</span><span>Дата</span></div>
+  <div id="allGrades"></div>
+ </section>
+</section>
+
+<section class="page" id="homework">
+ <section class="glass panel">
+  <div class="panel-head"><div><h3>Домашние задания</h3><p>Отмечай выполненные задачи</p></div></div>
+  <div id="allTasks"></div>
+ </section>
+</section>
+
+<footer>GLASS DIARY · НЕОФИЦИАЛЬНЫЙ UI-КОНЦЕПТ</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const lessons=[
+ {time:"08:30",end:"09:15",name:"Алгебра",teacher:"Ирина Сергеевна",room:"204"},
+ {time:"09:25",end:"10:10",name:"Английский язык",teacher:"Мария Андреевна",room:"118"},
+ {time:"10:25",end:"11:10",name:"История",teacher:"Александр Петрович",room:"305"},
+ {time:"11:25",end:"12:10",name:"Физика",teacher:"Ольга Викторовна",room:"212"},
+ {time:"12:30",end:"13:15",name:"Литература",teacher:"Елена Павловна",room:"106"},
+ {time:"13:25",end:"14:10",name:"Физкультура",teacher:"Андрей Николаевич",room:"Зал"}
+];
+const grades=[
+ {subject:"Алгебра",work:"Самостоятельная работа",date:"Сегодня",mark:5,icon:"∑"},
+ {subject:"Английский",work:"Словарный диктант",date:"Вчера",mark:4,icon:"A"},
+ {subject:"История",work:"Ответ у доски",date:"Вчера",mark:5,icon:"⌘"},
+ {subject:"Физика",work:"Лабораторная работа",date:"21 окт.",mark:4,icon:"ϟ"},
+ {subject:"Литература",work:"Анализ произведения",date:"20 окт.",mark:5,icon:"❝"},
+ {subject:"Алгебра",work:"Домашняя работа",date:"20 окт.",mark:4,icon:"∑"},
+ {subject:"Физика",work:"Тест",date:"18 окт.",mark:3,icon:"ϟ"}
+];
+const tasks=[
+ {subject:"Алгебра",name:"№ 248, 251 — решить уравнения",due:"Завтра",done:false},
+ {subject:"Английский",name:"Выучить 20 новых слов",due:"Завтра",done:false},
+ {subject:"История",name:"Подготовить краткий конспект",due:"Понедельник",done:false},
+ {subject:"Литература",name:"Прочитать главы 4–5",due:"Вторник",done:true}
+];
+const $=s=>document.querySelector(s);
+function lessonHTML(l){return `<div class="lesson"><div class="lesson-time">${l.time}<br>${l.end}</div><div class="lesson-bar"></div><div class="lesson-copy"><b>${l.name}</b><small>${l.teacher}</small></div><span class="room">Каб. ${l.room}</span></div>`}
+function gradeHTML(g){return `<div class="grade"><div class="grade-icon">${g.icon}</div><div class="grade-copy"><b>${g.subject}</b><small>${g.work} · ${g.date}</small></div><div class="mark ${g.mark===4?'four':g.mark===3?'three':''}">${g.mark}</div></div>`}
+function taskHTML(t,i){return `<div class="task ${t.done?'done':''}"><input type="checkbox" data-task="${i}" ${t.done?'checked':''} aria-label="Выполнено"><div class="task-copy"><b>${t.name}</b><small>${t.subject}</small></div><span class="due">${t.due}</span></div>`}
+function render(){
+ $("#previewLessons").innerHTML=lessons.slice(0,4).map(lessonHTML).join("");
+ $("#allLessons").innerHTML=lessons.map(lessonHTML).join("");
+ $("#previewGrades").innerHTML=grades.slice(0,4).map(gradeHTML).join("");
+ $("#allGrades").innerHTML=grades.map((g,i)=>`<div class="grade-table-row" data-subject="${g.subject}"><span><b>${g.subject}</b><br><small>${g.work}</small></span><span class="mark ${g.mark===4?'four':g.mark===3?'three':''}">${g.mark}</span><small>${g.date}</small></div>`).join("");
+ $("#previewTasks").innerHTML=tasks.slice(0,3).map(taskHTML).join("");
+ $("#allTasks").innerHTML=tasks.map(taskHTML).join("");
+}
+render();
+function go(page){
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===page));
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(b.dataset.page));
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+$("#theme").onclick=()=>{document.body.classList.toggle("light");notify("Тема изменена")};
+$("#filter").onchange=e=>document.querySelectorAll(".grade-table-row").forEach(r=>r.style.display=e.target.value==="all"||r.dataset.subject===e.target.value?"grid":"none");
+document.addEventListener("change",e=>{
+ if(e.target.matches("[data-task]")){
+  tasks[Number(e.target.dataset.task)].done=e.target.checked;
+  render();
+ }
+});
+document.querySelectorAll(".week button").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".week button").forEach(x=>x.classList.remove("active"));
+ b.classList.add("active");
+ notify("Это демонстрационное расписание");
+});
+let timer;
+function notify(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(timer);timer=setTimeout(()=>t.classList.remove("show"),2200)}
+const date=new Date();
+$("#date").textContent=new Intl.DateTimeFormat("ru-RU",{weekday:"long",day:"numeric",month:"long"}).format(date).toUpperCase();
+const hour=date.getHours();
+$("#heading").textContent=(hour<12?"Доброе утро":hour<18?"Хорошего дня":"Добрый вечер")+" 👋";
+</script>
+</body>
+</html>
